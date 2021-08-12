@@ -9,6 +9,10 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  cloud:
+    loadbalancer:
+      ribbon:
+        enable: false
 
 server:
   port: 8081

@@ -1,36 +1,32 @@
 package com.kognitiv_.assignment.utils;
 
 import com.kognitiv_.assignment.domain.Photo;
-import com.kognitiv_.assignment.exception.InternalServerException;
+import com.kognitiv_.assignment.repository.PhotoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.Random;
-import java.util.stream.LongStream;
 
 @Component
 @Slf4j
 public class Utility {
 
-    @Autowired
-    private RestTemplate restTemplate;
-
     @Value("${photos.base.url}")
     private String photosBaseURL;
+
+    @Autowired
+    private PhotoRepository photoRepository;
 
     public List<String> getImageURLList() {
         List<Photo> photosList = new ArrayList<>();
         try {
-            photosList = restTemplate.exchange(photosBaseURL, HttpMethod.GET, null, new ParameterizedTypeReference<List<Photo>>(){}).getBody();
+            photosList = photoRepository.getPhotos();
         } catch (RestClientException e) {
             log.error("Unable to get photos: {}", e.toString());
             //todo: if mandatory throw exception
